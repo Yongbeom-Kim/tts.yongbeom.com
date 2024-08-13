@@ -61,6 +61,8 @@ terraform {
     key    = var.backend_key
     region = var.backend_region
     dynamodb_table = var.backend_table
+    access_key = var.aws_iam_access_key
+    secret_key = var.aws_iam_secret_key
   }
 }
 

@@ -68,7 +68,7 @@ tofu_backend_output:
 ## Terraform
 
 _tofu:
-	set -a && source env/.global.env && source env/.env.$(ENV) && set +a && \
+	@set -a && source env/.global.env && source env/.env.$(ENV) && set +a && \
 		cd terraform && tofu $(COMMAND)
 
 tofu:
