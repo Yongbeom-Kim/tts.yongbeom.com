@@ -26,5 +26,5 @@ jobs:
         run: ./scripts/sops.sh decrypt
         
       - name: Tofu 
-        run: make tofu_deploy
+        run: make tofu_deploy AUTO=1
 
