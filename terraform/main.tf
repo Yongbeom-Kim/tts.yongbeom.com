@@ -29,11 +29,11 @@ variable "backend_table" {
 }
 
 variable "environment" {
-    description = "The environment to deploy to. Can be dev, stage, or prod."
+    description = "The environment to deploy to. Can be development, staging, or production."
     type        = string
     validation {
-        condition = contains(["dev", "stage", "prod"], var.environment)
-        error_message = "Environment must be one of dev, stage, or prod."
+        condition = contains(["development", "staging", "production"], var.environment)
+        error_message = "Environment must be one of development, staging, or production."
     }
 }
 

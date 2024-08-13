@@ -35,6 +35,23 @@ data "aws_iam_policy_document" "terraform_backend" {
 
   statement {
     effect    = "Allow"
+    actions   = ["dynamodb:*"]
+    resources = [
+      aws_dynamodb_table.backend_lock.arn,
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = ["s3:*"]
+    resources = [
+      aws_s3_bucket.backend.arn,
+      "${aws_s3_bucket.backend.arn}/*"
+    ]
+  }
+
+  statement {
+    effect    = "Allow"
     actions   = ["ecr:*"]
     resources = ["arn:aws:ecr:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:repository/${local.project_resource_prefix}*"]
   }

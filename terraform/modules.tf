@@ -27,6 +27,7 @@ module "frontend" {
     website_bucket_name = "${var.project_resource_prefix}-frontend"
     aws_region = var.backend_region
     cloudfront_cache_policy_name = "${var.project_resource_prefix}-frontend-cache-policy"
+    backend_route = module.backend.backend_lambda_url
 }
 
 # output "backend_iam_arn" {
