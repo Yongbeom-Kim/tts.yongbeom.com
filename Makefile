@@ -82,7 +82,7 @@ tofu_select_workspace: tofu_init
 tofu_plan: tofu_select_workspace
 	@$(MAKE) _tofu COMMAND='plan $(TF_VARS)'
 
-tofu_deploy: tofu_select_workspace
+tofu_deploy: tofu_select_workspace build_frontend
 	@$(MAKE) _tofu COMMAND='apply $(TF_VARS) $(TF_AUTO_APPROVE_FLAG)'
 
 tofu_destroy: tofu_select_workspace
@@ -96,7 +96,9 @@ tofu_output_variable:
 
 
 # Application
-dev_frontend:
+build_frontend:
+	cd frontend_tts_lib && yarn
+	cd frontend && yarn && yarn build
 
 dev_backend:
 
