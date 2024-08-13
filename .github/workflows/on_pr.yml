@@ -1,0 +1,34 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Test on Pull Request
+
+permissions:
+  pull-requests: write
+
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+  GH_TOKEN: ${{ github.token }}
+
+on:
+  pull_request:
+    branches: [ "main", "dev" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        uses: ./.github/actions/install_dependencies
+        with: 
+          AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
+      
+      - name: Decrypt Stuff
+        run: ./scripts/sops.sh decrypt
+
+      - name: Tofu
+        run: make tofu_plan
+  # TODO: Add unit test
