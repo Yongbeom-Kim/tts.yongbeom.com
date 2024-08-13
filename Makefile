@@ -52,7 +52,7 @@ decrypt_and_run:
 	@./scripts/sops.sh decrypt_and_run $(COMMAND)
 
 _tofu_backend:
-	./scripts/sops.sh decrypt_and_run "set -a && source env/.global.env && source env/.$(ENV).env && set +a && cd terraform/backend && tofu $(COMMAND)"
+	./scripts/sops.sh decrypt_and_run "set -a && source env/.global.env && source env/.env.$(ENV) && set +a && cd terraform/backend && tofu $(COMMAND)"
 
 tofu_backend_deploy: 
 	$(MAKE) _tofu_backend COMMAND='init'
@@ -70,7 +70,7 @@ tofu_backend_output:
 
 _tofu:
 	@./scripts/sops.sh decrypt_and_run \
-		"set -a && source env/.global.env && source env/.$(ENV).env && set +a && \
+		"set -a && source env/.global.env && source env/.env.$(ENV) && set +a && \
 		cd terraform && tofu $(COMMAND)"
 
 tofu:
