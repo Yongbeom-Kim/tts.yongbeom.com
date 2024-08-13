@@ -12,7 +12,7 @@ resource "null_resource" "vite_build" {
   }
 
   provisioner "local-exec" {
-    command = "cd ${path.module}/.. && yarn && VITE_BACKEND_ROUTE=${var.backend_route} yarn build"
+    command = " cd ${path.module}/../../frontend_tts_lib && yarn && cd ${path.module}/.. && yarn && VITE_BACKEND_ROUTE=${var.backend_route} yarn build"
   }
 }
 
