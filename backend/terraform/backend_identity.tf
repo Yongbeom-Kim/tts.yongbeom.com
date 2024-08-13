@@ -1,17 +1,17 @@
-variable "backend_iam_user_name" {
+variable "backend_lambda_iam_user_name" {
   type = string
 }
-variable "backend_iam_user_path" {
+variable "backend_lambda_iam_user_path" {
   type = string
 }
 
 resource "aws_iam_user" "backend_user" {
-  name = var.backend_iam_user_name
-  path = var.backend_iam_user_path
+  name = var.backend_lambda_iam_user_name
+  path = var.backend_lambda_iam_user_path
 }
 
 resource "aws_iam_user_policy" "backend_s3_policy" {
-  name   = "${var.backend_iam_user_name}-policy"
+  name   = "${var.backend_lambda_iam_user_name}-policy"
   user   = aws_iam_user.backend_user.name
   policy = data.aws_iam_policy_document.s3_upload_policy.json
 }

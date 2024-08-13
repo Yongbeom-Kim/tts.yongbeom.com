@@ -1,0 +1,41 @@
+name: Install Dependencies
+
+description: Install Dependencies on the runner
+
+inputs:
+  AGE_SECRET_KEY:
+    description: 'The secret key for age encryption'
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Install SOPS
+      shell: bash
+      run: |
+        # age
+        sudo apt install age -y
+        mkdir -p ${XDG_CONFIG_HOME-$HOME/.config}/sops/age
+        echo ${{ inputs.AGE_SECRET_KEY }} > ${XDG_CONFIG_HOME-$HOME/.config}/sops/age/keys.txt
+        # sops
+        curl -LO https://github.com/getsops/sops/releases/download/v3.9.0/sops-v3.9.0.linux.amd64
+        mv sops-v3.9.0.linux.amd64 /usr/local/bin/sops
+        chmod +x /usr/local/bin/sops
+
+    - name: Install OpenTofu
+      shell: bash
+      run: |
+        # https://opentofu.org/docs/intro/install/deb/
+        # Download the installer script:
+        curl --proto '=https' --tlsv1.2 -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh
+        # Alternatively: wget --secure-protocol=TLSv1_2 --https-only https://get.opentofu.org/install-opentofu.sh -O install-opentofu.sh
+        
+        # Give it execution permissions:
+        chmod +x install-opentofu.sh
+        
+        # Please inspect the downloaded script
+        
+        # Run the installer:
+        ./install-opentofu.sh --install-method deb
+        
+        # Remove the installer:
+        rm -f install-opentofu.sh

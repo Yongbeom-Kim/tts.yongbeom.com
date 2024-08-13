@@ -8,6 +8,12 @@ This project does:
 
 The project infrastructure is hosted on AWS through Terraform (or OpenTofu), and the backend is hosted on AWS Lambda.
 
+## Requirements
+
+| Thing                            | Version  |
+| -------------------------------- | -------- |
+| [OpenTofu](https://opentofu.org) | v1.8[^1] |
+
 ## Why I made this
 
 When OpenAI's whisper tool came out, I thought it was fantastic - though I found it difficult to use. I wanted to be able to simply
@@ -41,3 +47,6 @@ When you request an audio file to be translated, the following happens:
 5. Run `yarn` in the frontend directory.
 6. Run `terraform init`, `terraform plan` and `terraform apply` (or `tofu`) in the frontend directory.
 7. Your app should be deployed!
+
+
+[^1]: We need OpenTofu v1.8 because of its [Early variable/locals evaluation](https://opentofu.org/blog/opentofu-1-8-0/) for input values for remote backend. To my best knowledge (as of Aug 2024), this is not supported in Terraform.

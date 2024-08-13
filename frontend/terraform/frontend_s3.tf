@@ -1,6 +1,19 @@
+variable "backend_route" {
+  type = string
+}
+
 variable "website_bucket_name" {
   type = string
+}
 
+resource "null_resource" "vite_build" {
+  triggers = {
+    always_run = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = "cd ${path.module}/.. && VITE_BACKEND_ROUTE=${var.backend_route} yarn build"
+  }
 }
 
 resource "aws_s3_bucket" "frontend" {
@@ -65,5 +78,6 @@ resource "aws_s3_object" "object" {
   etag = each.value.digests.md5
 
   # We need this depends_on to invalidate the cloudfront cache before uploading all aws s3 objects.
-  depends_on = [ null_resource.s3_cache_invalidation ]
+  # Also, build before upload.
+  depends_on = [null_resource.s3_cache_invalidation, null_resource.vite_build]
 }

@@ -14,6 +14,7 @@ import requests
 
 load_dotenv()
 
+BUCKET_NAME = os.environ['backend_s3_upload_bucket_name']
 
 @pytest.fixture
 def test_file():
@@ -35,7 +36,7 @@ def test_env_var():
 @pytest.mark.slow
 @pytest.mark.s3
 def test_bucket_exists():
-    s3.meta.client.head_bucket(Bucket=os.environ['AWS_S3_AUDIO_BUCKET_NAME'])
+    s3.meta.client.head_bucket(Bucket=BUCKET_NAME)
 
 
 @pytest.mark.slow
@@ -47,6 +48,8 @@ def test_upload_and_delete_file():
     item_key = 'this-is-a-test-file-without-key-collisions.wav'
     assert item_path.exists()
     assert item_path.is_file()
+    if item_exists(item_key):
+        delete_item(item_key)
     assert not item_exists(item_key)
     upload_file(item_path, item_key)
     try:
@@ -62,7 +65,7 @@ def test_create_presigned_download_url(test_file):
     url = create_presigned_download_url(test_file)
     assert url is not None
     assert "https://" in url
-    assert os.environ['AWS_S3_AUDIO_BUCKET_NAME'] in url
+    assert BUCKET_NAME in url
     assert test_file in url
     response = requests.get(url)
     assert response.status_code == 200

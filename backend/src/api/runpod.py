@@ -8,8 +8,8 @@ JobStatus = Literal['IN_PROGRESS', 'COMPLETED', 'ERROR', 'IN_QUEUE', 'FAILED']
 Transcript = List[TypedDict(
     'TranscriptSegment', {'start': float, 'end': float, 'text': str})]
 
-RUNPOD_API_KEY = os.getenv("RUNPOD_API_KEY")
-RUNPOD_API_URL = os.getenv("RUNPOD_API_URL")
+RUNPOD_API_KEY = os.getenv("backend_RUNPOD_API_KEY")
+RUNPOD_API_URL = os.getenv("backend_RUNPOD_API_URL")
 
 
 def submit_audio(audio_request_response: requests.Response) -> Tuple[bool, str, str]:
