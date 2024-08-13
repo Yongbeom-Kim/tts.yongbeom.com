@@ -12,8 +12,7 @@ from src.upload.s3 import (
 )
 import requests
 
-load_dotenv()
-
+BUCKET_NAME = os.environ['backend_s3_upload_bucket_name']
 
 @pytest.fixture
 def test_file():
@@ -35,7 +34,7 @@ def test_env_var():
 @pytest.mark.slow
 @pytest.mark.s3
 def test_bucket_exists():
-    s3.meta.client.head_bucket(Bucket=os.environ['AWS_S3_AUDIO_BUCKET_NAME'])
+    s3.meta.client.head_bucket(Bucket=BUCKET_NAME)
 
 
 @pytest.mark.slow
@@ -62,7 +61,7 @@ def test_create_presigned_download_url(test_file):
     url = create_presigned_download_url(test_file)
     assert url is not None
     assert "https://" in url
-    assert os.environ['AWS_S3_AUDIO_BUCKET_NAME'] in url
+    assert BUCKET_NAME in url
     assert test_file in url
     response = requests.get(url)
     assert response.status_code == 200
