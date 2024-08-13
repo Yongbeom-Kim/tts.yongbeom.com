@@ -21,6 +21,12 @@ jobs:
         uses: ./.github/actions/install_dependencies
         with: 
           AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
+
+      - name: Setup AWS Credentials
+        run: |
+          export AWS_ACCESS_KEY_ID=$(cat terraform/backend/terraform.tfstate | jq .outputs.iam_access_key_id.value | tr -d '"')
+          export AWS_SECRET_ACCESS_KEY=$(cat terraform/backend/terraform.tfstate | jq .outputs.iam_access_key_secret.value | tr -d '"')
+          export AWS_REGION=$(cat terraform/backend/terraform.tfstate | jq .outputs.aws_region.value | tr -d '"')
       
       - name: Decrypt Stuff
         run: ./scripts/sops.sh decrypt
