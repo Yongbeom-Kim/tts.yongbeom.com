@@ -13,6 +13,15 @@ resource "aws_ecr_repository" "backend_lambda" {
   }
 }
 
+resource "null_resource" "copy_env_file" {
+  triggers = {
+    always_run = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = "cp ${path.root}/../env/.env.${terraform.workspace} ${path.module}/../.env"
+  }
+}
 ### Build and push docker
 data "aws_ecr_authorization_token" "token" {}
 
@@ -23,8 +32,9 @@ resource "docker_image" "backend_image" {
     # dockerfile = "${path.module}/../Dockerfile"
     tag        = ["${aws_ecr_repository.backend_lambda.repository_url}:latest"]
     build_args = {
-      aws_public_key = aws_iam_access_key.backend_user.id
-      aws_secret_key = aws_iam_access_key.backend_user.secret
+      env_file = "${path.module}/../.env"
+      AWS_PUBLIC_KEY = aws_iam_access_key.backend_user.id
+      AWS_SECRET_KEY = aws_iam_access_key.backend_user.secret
     }
   }
   force_remove = true
@@ -32,6 +42,8 @@ resource "docker_image" "backend_image" {
   triggers = {
     run_always = timestamp()
   }
+
+  depends_on = [ null_resource.copy_env_file ]
 }
 
 resource "docker_registry_image" "backend_image" {

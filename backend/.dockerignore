@@ -24,7 +24,7 @@ Dockerfile
 
 # Distribution / packaging
 .Python
-env/
+# env/
 build/
 develop-eggs/
 dist/
@@ -94,4 +94,4 @@ venv/
 terraform/
 
 # Environment variables for building
-.env.terraform
+# .env.terraform

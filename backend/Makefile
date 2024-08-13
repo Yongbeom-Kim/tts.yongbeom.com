@@ -16,8 +16,9 @@ unit_test:
 		pytest test/unit
 	cd .. && ./scripts/sops.sh encrypt
 
-docker_build:
-	
+docker_run:
+	docker run -it --entrypoint /bin/bash $(shell docker images -q | head -n 1)
+
 component_test:
 	-cd .. && ./scripts/sops.sh decrypt
 	@ set -a && . ../env/.env.development && . ../env/.global.env && set +a && \
