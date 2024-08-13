@@ -11,15 +11,20 @@ files=(
 encrypt() {
     for file in ${files[@]}; do
         echo "encrypting $file"
-        sops -d -i $file 2>&1 > /dev/null # decrypt file before encrypting to prevent double encryption
-        sops -e -i $file
+        if [ ! -f $file ]; then
+            continue
+        fi
+        sops -e $file > $file.secret
     done
 }
 
 decrypt() {
     for file in ${files[@]}; do
         echo "decrypting $file"
-        sops -d -i $file
+        if [ ! -f $file ]; then
+            continue
+        fi
+        sops -d $file.secret > $file
     done
 }
 

@@ -1,3 +1,8 @@
+variable "aws_region" {
+  description = "The region to deploy to."
+  type        = string
+}
+
 variable "aws_iam_access_key" {
   description = "value of the AWS IAM access key"
   type        = string
@@ -15,11 +20,6 @@ variable "backend_bucket" {
 
 variable "backend_key" {
   description = "The name of the key to use for the Terraform backend."
-  type        = string
-}
-
-variable "backend_region" {
-  description = "The region to deploy the Terraform backend to."
   type        = string
 }
 
@@ -59,7 +59,7 @@ terraform {
     // from terraform_backend/main.tf
     bucket = var.backend_bucket
     key    = var.backend_key
-    region = var.backend_region
+    region = var.aws_region
     dynamodb_table = var.backend_table
     access_key = var.aws_iam_access_key
     secret_key = var.aws_iam_secret_key
@@ -67,7 +67,7 @@ terraform {
 }
 
 provider "aws" {
-  region = var.backend_region
+  region = var.aws_region
   access_key = var.aws_iam_access_key
   secret_key = var.aws_iam_secret_key
   default_tags {

@@ -33,13 +33,9 @@ TF_BACKEND_KEY=terraform.tfstate
 TF_VARS=-var='aws_iam_access_key=$(AWS_IAM_KEY)' \
 -var='aws_iam_secret_key=$(AWS_IAM_SECRET_KEY)' \
 -var='backend_bucket=$(TF_BACKEND_S3_NAME)' \
--var='backend_region=$(AWS_REGION)' \
 -var='backend_table=$(TF_BACKEND_DYNAMODB_TABLE)' \
 -var='backend_key=$(TF_BACKEND_KEY)' \
 -var='environment=$(ENV)'
-
-test:
-	echo $(TF_VARS)
 
 # Infrastucture (Terraform)
 
@@ -50,40 +46,40 @@ decrypt:
 encrypt:
 	@./scripts/sops.sh encrypt $(FD_REDIRECT)
 
-_tofu_backend:
+_tofu_backend: decrypt
 	set -a && source env/.global.env && source env/.env.$(ENV) && set +a && cd terraform/backend && tofu $(COMMAND)
 
-tofu_backend_deploy: 
+tofu_backend_deploy: decrypt
 	$(MAKE) _tofu_backend COMMAND='init'
 	$(MAKE) _tofu_backend COMMAND='plan'
 	$(MAKE) _tofu_backend COMMAND='apply $(TF_AUTO_APPROVE_FLAG)'
 
-tofu_backend_destroy: 
+tofu_backend_destroy: decrypt
 	$(MAKE) _tofu_backend COMMAND='destroy $(TF_AUTO_APPROVE_FLAG)'
 
-tofu_backend_output:
+tofu_backend_output: decrypt
 	@cat terraform/backend/terraform.tfstate | jq -r .outputs.$(VAR).value
 
 
 ## Terraform
 
-_tofu:
+_tofu: decrypt
 	@set -a && source env/.global.env && source env/.env.$(ENV) && set +a && \
 		cd terraform && tofu $(COMMAND)
 
-tofu:
+tofu: decrypt
 	@$(MAKE) _tofu COMMAND='$(COMMAND)'
 
-tofu_var:
+tofu_var: decrypt
 	@$(MAKE) _tofu COMMAND='$(COMMAND) $(TF_VARS)'
 
-tofu_init:
+tofu_init: decrypt
 	@$(MAKE) _tofu COMMAND='init $(TF_VARS)'
 
-tofu_select_workspace: tofu_init
+tofu_select_workspace: decrypt tofu_init
 	@$(MAKE) _tofu COMMAND='workspace select $(TF_VARS) -or-create=true $(ENV)'
 
-tofu_plan: tofu_select_workspace
+tofu_plan: decrypt tofu_select_workspace
 	@$(MAKE) _tofu COMMAND='plan $(TF_VARS)'
 
 tofu_deploy: tofu_select_workspace
@@ -92,10 +88,10 @@ tofu_deploy: tofu_select_workspace
 tofu_destroy: tofu_select_workspace
 	@$(MAKE) _tofu COMMAND='destroy $(TF_VARS) $(TF_AUTO_APPROVE_FLAG)'
 
-tofu_state:
+tofu_state: decrypt
 	@$(MAKE) _tofu COMMAND='state pull $(TF_VARS)'
 
-tofu_output_variable:
+tofu_output_variable: decrypt
 	@$(MAKE) tofu_state | jq -r .outputs.$(VAR).value
 
 
