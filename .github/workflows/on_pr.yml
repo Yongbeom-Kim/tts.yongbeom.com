@@ -28,4 +28,3 @@ jobs:
 
       - name: Tofu
         run: ./decrypt_and_run.sh make tofu_plan
-

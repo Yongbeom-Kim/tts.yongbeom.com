@@ -72,6 +72,9 @@ _tofu:
 		cd terraform && tofu $(COMMAND)
 
 tofu:
+	@$(MAKE) _tofu COMMAND='$(COMMAND)'
+
+tofu_var:
 	@$(MAKE) _tofu COMMAND='$(COMMAND) $(TF_VARS)'
 
 tofu_init:

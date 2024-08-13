@@ -59,6 +59,8 @@ module "dir" {
   source = "hashicorp/dir/template"
 
   base_dir = "${path.module}/../dist"
+
+  depends_on = [ null_resource.vite_build ]
 }
 
 resource "aws_s3_object" "object" {
@@ -79,5 +81,5 @@ resource "aws_s3_object" "object" {
 
   # We need this depends_on to invalidate the cloudfront cache before uploading all aws s3 objects.
   # Also, build before upload.
-  depends_on = [null_resource.s3_cache_invalidation, null_resource.vite_build]
+  depends_on = [null_resource.s3_cache_invalidation]
 }
