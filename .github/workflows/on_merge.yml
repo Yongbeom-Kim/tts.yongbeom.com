@@ -23,5 +23,5 @@ jobs:
           AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
         
       - name: Tofu 
-        run: make tofu_deploy
+        run: ./decrypt_and_run.sh make tofu_deploy
 
