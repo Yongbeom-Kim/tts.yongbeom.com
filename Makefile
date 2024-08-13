@@ -67,19 +67,19 @@ _tofu: decrypt
 	@set -a && source env/.global.env && source env/.env.$(ENV) && set +a && \
 		cd terraform && tofu $(COMMAND)
 
-tofu: decrypt
+tofu:
 	@$(MAKE) _tofu COMMAND='$(COMMAND)'
 
-tofu_var: decrypt
+tofu_var:
 	@$(MAKE) _tofu COMMAND='$(COMMAND) $(TF_VARS)'
 
-tofu_init: decrypt
+tofu_init:
 	@$(MAKE) _tofu COMMAND='init $(TF_VARS)'
 
-tofu_select_workspace: decrypt tofu_init
+tofu_select_workspace: tofu_init
 	@$(MAKE) _tofu COMMAND='workspace select $(TF_VARS) -or-create=true $(ENV)'
 
-tofu_plan: decrypt tofu_select_workspace
+tofu_plan: tofu_select_workspace
 	@$(MAKE) _tofu COMMAND='plan $(TF_VARS)'
 
 tofu_deploy: tofu_select_workspace
@@ -88,10 +88,10 @@ tofu_deploy: tofu_select_workspace
 tofu_destroy: tofu_select_workspace
 	@$(MAKE) _tofu COMMAND='destroy $(TF_VARS) $(TF_AUTO_APPROVE_FLAG)'
 
-tofu_state: decrypt
+tofu_state:
 	@$(MAKE) _tofu COMMAND='state pull $(TF_VARS)'
 
-tofu_output_variable: decrypt
+tofu_output_variable:
 	@$(MAKE) tofu_state | jq -r .outputs.$(VAR).value
 
 

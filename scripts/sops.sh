@@ -10,20 +10,20 @@ files=(
 
 encrypt() {
     for file in ${files[@]}; do
-        echo "encrypting $file"
         if [ ! -f $file ]; then
             continue
         fi
+        # echo "encrypting $file"
         sops -e $file > $file.secret
     done
 }
 
 decrypt() {
     for file in ${files[@]}; do
-        echo "decrypting $file"
         if [ ! -f $file.secret ]; then
             continue
         fi
+        # echo "decrypting $file.secret"
         sops -d $file.secret > $file
     done
 }
