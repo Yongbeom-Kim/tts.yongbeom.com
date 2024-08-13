@@ -21,7 +21,7 @@ encrypt() {
 decrypt() {
     for file in ${files[@]}; do
         echo "decrypting $file"
-        if [ ! -f $file ]; then
+        if [ ! -f $file.secret ]; then
             continue
         fi
         sops -d $file.secret > $file

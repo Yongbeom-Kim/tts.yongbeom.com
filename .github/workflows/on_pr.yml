@@ -25,7 +25,10 @@ jobs:
         uses: ./.github/actions/install_dependencies
         with: 
           AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
+      
+      - name: Decrypt Stuff
+        run: ./scripts/sops.sh decrypt
 
       - name: Tofu
-        run: ./decrypt_and_run.sh make tofu_plan
+        run: make tofu_plan
   # TODO: Add unit test
