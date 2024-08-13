@@ -1,9 +1,9 @@
 #!/bin/bash
 
 files=(
-    "backend/env/.env.production"
-    "backend/env/.env.staging"
-    "backend/env/.env.development"
+    "env/.env.production"
+    "env/.env.staging"
+    "env/.env.development"
     "terraform/backend/terraform.tfstate"
     "terraform/.env"
 )
