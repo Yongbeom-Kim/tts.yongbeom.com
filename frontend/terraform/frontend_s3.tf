@@ -16,6 +16,7 @@ resource "null_resource" "vite_build" {
   }
 }
 
+
 resource "aws_s3_bucket" "frontend" {
   bucket = var.website_bucket_name
 }
