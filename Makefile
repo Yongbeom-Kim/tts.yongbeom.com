@@ -38,6 +38,8 @@ TF_VARS=-var='aws_iam_access_key=$(AWS_IAM_KEY)' \
 -var='environment=$(ENV)'
 
 # Infrastucture (Terraform)
+echo_tf_vars:
+	@echo $(TF_VARS)
 
 ## Terraform Backend
 decrypt:

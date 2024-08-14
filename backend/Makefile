@@ -17,7 +17,7 @@ unit_test:
 	cd .. && ./scripts/sops.sh encrypt
 
 docker_run:
-	docker run -it -p 5000:5000 $(shell docker images -q | head -n 1)
+	docker run -it -p 8080:5000 $(shell docker images -q | head -n 1)
 
 docker_run_bash:
 	docker run -it --entrypoint /bin/bash $(shell docker images -q | head -n 1)

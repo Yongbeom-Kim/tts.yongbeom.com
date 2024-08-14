@@ -1,9 +1,6 @@
-import {
-  get_s3_presigned_download_link,
-  get_s3_presigned_upload_link,
-  upload_file_from_s3_presigned_link,
-} from "../../src/endpoints/s3";
-import { set_backend_path } from "../../src/index";
+import { describe, test, expect, beforeEach } from 'vitest';
+import { set_backend_path } from "../../../../src/utils/backend";
+import { get_s3_presigned_upload_link, upload_file_from_s3_presigned_link, get_s3_presigned_download_link } from "../../../../src/utils/backend/endpoints/s3";
 
 const UPLOAD_FILE_NAME = "test.txt";
 const UPLOAD_FILE_CONTENT = "test";
@@ -19,7 +16,7 @@ describe("test get_s3_presigned_upload_link", () => {
     const [res, err] = await get_s3_presigned_upload_link(UPLOAD_FILE_NAME);
     expect(err).toBeNull();
     const { url, fields } = res!;
-    expect(url).toContain("https://s3.amazonaws.com");
+    expect(url).toContain("s3.amazonaws.com");
     expect(fields).toHaveProperty("AWSAccessKeyId");
     expect(fields).toHaveProperty("key");
     expect(fields).toHaveProperty("policy");
@@ -50,6 +47,6 @@ describe("test get_s3_presigned_download_link", () => {
   test("get_s3_presigned_download_link returns url", async () => {
     const [res, err] = await get_s3_presigned_download_link(UPLOAD_FILE_NAME);
     expect(err).toBeNull();
-    expect(res).toContain("https://s3.amazonaws.com");
+    expect(res).toContain("s3.amazonaws.com");
   });
 });

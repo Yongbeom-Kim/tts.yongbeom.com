@@ -10,10 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "axios": "^1.6.8",
+    "axios": "^1.7.4",
     "classnames": "^2.5.1",
     "crypto-js": "^4.2.0",
-    "frontend_tts_lib": "link:../frontend_tts_lib",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

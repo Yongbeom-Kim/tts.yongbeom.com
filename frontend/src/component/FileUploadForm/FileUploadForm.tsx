@@ -7,9 +7,9 @@ import {
   TranscriptionState,
   useTranscriptionService,
 } from "../../hooks/transcribe";
-import { RunpodModelConfig, RunpodTranscriptObjectType } from "frontend_tts_lib/types"
 import { TranscriptionResultForm } from "./TranscriptionResultForm";
 import { ModelConfigForm } from "./ModelConfigForm";
+import { RunpodModelConfig, RunpodTranscriptObjectType } from "../../utils/backend/types";
 
 type FileUploadFormProps = React.HTMLAttributes<HTMLFormElement>;
 

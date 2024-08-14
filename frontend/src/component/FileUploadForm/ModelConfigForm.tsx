@@ -2,7 +2,7 @@ import classNames from "classnames";
 import {
   RunpodModelType,
   RunpodSupportedLanguages,
-} from "frontend_tts_lib/types";
+} from "../../utils/backend/types";
 
 
 
