@@ -18,4 +18,4 @@ ENV AWS_SECRET_KEY=$AWS_SECRET_KEY
 # CORS should be handled by lambda.
 # Value is overridden to 1 in dev script
 ENV ENABLE_FLASK_CORS=0 
-CMD ["gunicorn", "src.app:app", "-b=:8080", "-w=1", "-c", "./gunicorn.conf.py"]
+CMD ["gunicorn", "src.appz:app", "-b=:8080", "-w=1", "-c", "./gunicorn.conf.py"]
