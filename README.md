@@ -59,7 +59,7 @@ Prior to this project, I looked at everyone saying "Don't use Terraform as a dep
 #### Frontend Deployment (`vite build`)
 I thought I was a genius to use terraform as a deployment tool for the frontend.
 
-The plan was to use a `local-exec` provisioner to run `vite build`, followed by a `hashicorp/dir/template` module to upload files to S3 ([file](./frontend/terraform/frontend_s3.tf)). This allows me to embed and override environment variables in the final build that come in the form of terraform (output) variables. 
+The plan was to use a `local-exec` provisioner to run `vite build`, followed by a [`hashicorp/dir/template`](https://registry.terraform.io/modules/hashicorp/dir/template/latest) module to upload files to S3 ([file](./frontend/terraform/frontend_s3.tf)). This allows me to embed and override environment variables in the final build that come in the form of terraform (output) variables. 
 
 So I ran into an issue because the files that the module looks at are planned during the `tofu plan` stage, then running `yarn build` with `vite` afterwards generates new files with new hashes, adn then the module tries to upload the old files, which are not found.
 
