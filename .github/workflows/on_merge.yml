@@ -1,0 +1,42 @@
+name: Deploy on merge
+
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+  GH_TOKEN: ${{ github.token }}
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+
+  workflow_dispatch:
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        uses: ./.github/actions/install_dependencies
+        with: 
+          AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
+      
+      - name: Decrypt Stuff
+        run: ./scripts/sops.sh decrypt
+
+      - name: Setup AWS Credentials
+        run: |
+          export AWS_ACCESS_KEY_ID=$(cat terraform/backend/terraform.tfstate | jq .outputs.iam_access_key_id.value | tr -d '"')
+          export AWS_SECRET_ACCESS_KEY=$(cat terraform/backend/terraform.tfstate | jq .outputs.iam_access_key_secret.value | tr -d '"')
+          export AWS_REGION=$(cat terraform/backend/terraform.tfstate | jq .outputs.aws_region.value | tr -d '"')
+          mkdir -p ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
+          echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
+          echo "[default]" > ~/.aws/config
+          echo "region = $AWS_REGION" >> ~/.aws/config
+      
+      - name: Tofu 
+        run: make tofu_deploy AUTO=1
+

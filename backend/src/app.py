@@ -13,7 +13,7 @@ from src.api.runpod import (
 # CORS handled by lambda.
 from flask_cors import CORS
 
-load_dotenv()
+# load_dotenv()
 
 # FIXME: this needs to depend on user + date or some other thing.
 app = Flask(__name__)

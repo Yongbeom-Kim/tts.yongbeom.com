@@ -1,19 +1,16 @@
-variable "s3_bucket_name" {
-  type = string
-}
-
-variable "canonical_owner_id" {
+variable "s3_upload_bucket_name" {
   type = string
 }
 
 resource "aws_s3_bucket" "upload_bucket" {
-  bucket        = var.s3_bucket_name
+  bucket        = var.s3_upload_bucket_name
   force_destroy = true
 }
 
 resource "aws_s3_bucket_cors_configuration" "upload_bucket" {
   bucket = aws_s3_bucket.upload_bucket.id
 
+  # FIXME: This is a very permissive CORS policy. You should restrict it to only the domains that need access.
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["PUT", "POST", "GET", "HEAD"]

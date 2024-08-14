@@ -7,15 +7,16 @@ import boto3
 import botocore
 
 
-load_dotenv('.env.prod')
+load_dotenv('../env/.env.development')
+load_dotenv('../env/.global.env')
 
 auth_object = {
     'region_name': os.getenv('AWS_REGION'),
     'aws_access_key_id': os.getenv('AWS_PUBLIC_KEY'),
     'aws_secret_access_key': os.getenv('AWS_SECRET_KEY'),
 }
-bucket_name = os.environ['AWS_S3_AUDIO_BUCKET_NAME']
-url_expiration = int(os.environ['AWS_PRESIGNED_URL_EXPIRATION'])
+bucket_name = os.environ['backend_s3_upload_bucket_name']
+url_expiration = int(os.environ['backend_presigned_s3_url_expiration'])
 session = boto3.Session(
     **auth_object
 )

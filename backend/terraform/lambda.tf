@@ -2,7 +2,7 @@ variable "backend_lambda_function_name" {
   type = string
 }
 
-variable "backend_lambda_image_uri" {
+variable "backend_lambda_iam_role_name" {
   type = string
 }
 
@@ -34,7 +34,7 @@ data "aws_iam_policy_document" "lambda_logs_policy" {
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
-  name               = "iam_for_lambda"
+  name               = var.backend_lambda_iam_role_name
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
   inline_policy {
     name   = "lambda_logs_policy"
@@ -51,7 +51,7 @@ resource "aws_lambda_function" "backend" {
   role          = aws_iam_role.iam_for_lambda.arn
 
   package_type = "Image"
-  image_uri    = "${var.backend_lambda_image_uri}:latest"
+  image_uri = "${aws_ecr_repository.backend_lambda.repository_url}:latest"
 
   source_code_hash = docker_registry_image.backend_image.sha256_digest
 }
