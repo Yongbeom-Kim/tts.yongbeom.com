@@ -21,7 +21,9 @@ record my lectures, and have them transcribed into text-to-speech. OpenAI's API,
 
 So, I decided to make a simple interface to interact with the whisper model, and host it on my own infrastructure.
 
-## How it works
+## Infrastructure
+
+### Code Base
 
 This is a monorepo with the following components:
 - `backend`: A Flask serverless container that interfaces with the RunPod serverless model to generate text-to-speech.
@@ -38,7 +40,26 @@ When you request an audio file to be translated, the following happens:
 6. The frontend periodically makes a request to the backend to check on the status of the RunPod job.
 7. Once the RunPod job is complete, the backend replies with the finished audio transcript.
 
-## To Deploy
+### Development Workflow, CI/CD
+
+This project follows the [gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) workflow, but in a somewhat loose and lazy way. The `main` branch is the production branch, and the `dev` branch is the development (staging) branch.
+
+Here is the general development flow:
+1. Create a feature branch off of `dev` (e.g. `feature/feature-name`).
+2. Make changes in the feature branch.
+   - In a feature branch, you can run `make tofu_deploy` to deploy the feature branch to the development environment. This is useful for testing.
+3. Create a pull request to merge the feature branch into `dev`.
+4. This triggers a GitHub action that runs tests and `tofu plan` on the development environment.
+5. Once the pull request is merged, the GitHub action runs `tofu apply` on the staging environment.
+6. When the staging environment is tested and ready, create a pull request to merge `dev` into `main`.
+7. This triggers the same github action as in step 4, but on the staging environment.
+8. Once the pull request is merged, the GitHub action runs `tofu apply` on the production environment.
+
+- Production: [tts.yongbeom.com](https://tts.yongbeom.com)
+- Staging: [staging.tts.yongbeom.com](https://stage.tts.yongbeom.com)
+- Development: [dev.tts.yongbeom.com](https://dev.tts.yongbeom.com)
+
+### To Deploy (Outdated)
 
 1. Create a RunPod account, and reverse a serverless GPU, with the preset faster-whisper model.
 2. Remove the `.example` suffix of `backend/.env.prod.example` and add the relevant RunPod credentials. Also add your desired S3 bucket name.
@@ -53,6 +74,10 @@ When you request an audio file to be translated, the following happens:
 
 
 ## Mistakes & Regrets
+### `tts` is a misnomer
+I made a mistake and accidentally named this project `tts.yongbeom.com`. But this is a misnomer since this project is actually a `speech-to-text` project. I should have named it `stt.yongbeom.com`. Oops.
+
+
 ### Terraform as deployment tool
 Prior to this project, I looked at everyone saying "Don't use Terraform as a deployment tool" and thought "what's the issue?". I now understand the issue.
 
