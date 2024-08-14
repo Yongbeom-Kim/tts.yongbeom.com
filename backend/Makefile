@@ -8,7 +8,7 @@ PYTHON_COMPONENT_TEST_VENV=.component_test.venv
 
 dev:
 	@ set -a && . ../env/.env.development && . ../env/.global.env && set +a && \
-		flask --app src.app:app run -h localhost -p 5000
+		flask --app src.app:app run -h localhost -p 8080
 
 unit_test:
 	-cd .. && ./scripts/sops.sh decrypt
@@ -17,7 +17,7 @@ unit_test:
 	cd .. && ./scripts/sops.sh encrypt
 
 docker_run:
-	docker run -it -p 8080:5000 $(shell docker images -q | head -n 1)
+	docker run -it -p 8080:8080 $(shell docker images -q | head -n 1)
 
 docker_run_bash:
 	docker run -it --entrypoint /bin/bash $(shell docker images -q | head -n 1)

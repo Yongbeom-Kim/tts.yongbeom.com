@@ -7,7 +7,7 @@ const UPLOAD_FILE_CONTENT = "test";
 
 // TODO: backend path should be set in a global setup file, with separate values for local and prod backend
 beforeEach(() => {
-  set_backend_path("http://localhost:5000");
+  set_backend_path("http://localhost:8080");
 });
 
 
