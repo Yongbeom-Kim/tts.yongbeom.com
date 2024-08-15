@@ -1,10 +1,11 @@
-import { set_backend_path } from "../../src";
-import { transcribe_audio, upload_file_s3 } from "../../src/endpoints";
-import { ModelConfig, ModelType } from "../../src/types/runpod";
+import { beforeEach, describe, expect, it } from "vitest";
+import { set_backend_path } from "../../../../src/utils/backend";
+import { transcribe_audio, upload_file_s3 } from "../../../../src/utils/backend/endpoints";
+import { ModelConfig, ModelType } from "../../../../src/utils/backend/types/runpod";
 
 // TODO: backend path should be set in a global setup file, with separate values for local and prod backend
 beforeEach(() => {
-    set_backend_path("http://localhost:5000");
+    set_backend_path("http://localhost:8080");
 })
 
 const WHISPER_MODEL_CONFIG = ModelConfig.fromObject({model: ModelType.TINY})
@@ -18,7 +19,7 @@ describe('test upload_file_s3', () => {
         const progress_states: string[] = []
         const [download_url, error] = await upload_file_s3('file.txt', file, (progress) => progress_states.push(progress));
         expect(error).toEqual(null);
-        expect(download_url).toContain("https://s3.amazonaws.com");
+        expect(download_url).toContain("s3.amazonaws.com");
         expect(progress_states).toEqual(['GETTING_LINK', 'UPLOADING', 'UPLOADED']);
     }, 15000)
 })

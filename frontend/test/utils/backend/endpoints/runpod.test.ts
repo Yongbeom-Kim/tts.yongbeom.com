@@ -4,14 +4,15 @@ request_transcription_status
 request_transcription_text
 */
 
-import { set_backend_path } from "../../src";
+import { beforeEach, describe, expect, test } from "vitest";
+import { set_backend_path } from "../../../../src/utils/backend";
 import {
   TEST_EXPORTS,
   create_transcription_job,
   request_transcription_text,
   wait_until_transcription_completed,
-} from "../../src/endpoints/runpod";
-import { ModelConfig, ModelType } from "../../src/types/runpod";
+} from "../../../../src/utils/backend/endpoints/runpod";
+import { ModelConfig, ModelType } from "../../../../src/utils/backend/types/runpod";
 
 const { request_transcription_status } = TEST_EXPORTS;
 
@@ -19,11 +20,9 @@ const AUDIO_FILE_URL =
   "https://github.com/runpod-workers/sample-inputs/raw/main/audio/gettysburg.wav";
 const WHIPSER_MODEL_CONFIG = ModelConfig.fromObject({model: ModelType.TINY})
 
-jest.mock('axios');
-
 // TODO: backend path should be set in a global setup file, with separate values for local and prod backend
 beforeEach(() => {
-  set_backend_path("http://localhost:5000");
+  set_backend_path("http://localhost:8080");
 });
 
 describe("test create_transcription_job", () => {
